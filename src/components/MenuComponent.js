@@ -13,7 +13,6 @@ class Menu extends Component {
 
     onDishSelect(dish) {
       this.setState({selectedDish: dish})
-      console.log(dish)
     }
 
     render() {
@@ -35,9 +34,7 @@ class Menu extends Component {
             <div className="row">
                 {menu}
             </div>
-            <div className="row">
-              <DishDetail dish={this.state.selectedDish} />
-            </div>
+            <DishDetail dish={this.state.selectedDish} />
           </div>
         );
     }

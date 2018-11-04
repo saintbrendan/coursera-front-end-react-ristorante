@@ -7,7 +7,6 @@ class DishDetail extends Component {
     }
 
     renderDish(dish) {
-      if (dish != null) {
         return(
           <div key={dish.id} className="col-12 col-md-5 m-1">
             <Card>
@@ -17,15 +16,47 @@ class DishDetail extends Component {
             </Card>
           </div>
         );
+    }
+
+    renderComments(comments) {
+      const commentsRendered = comments.map((comment) => {
+        const commentDate = new Date(comment.date)
+        const dateMonDdYYYY = commentDate.toLocaleDateString('us-EN', {  year: 'numeric', month: 'short', day: '2-digit' })
+            return (
+                <li key={comment.id} className="text-left">
+                <p>{comment.comment}</p>
+                <p>--{comment.author} , {dateMonDdYYYY}</p>
+                </li>
+            );
+          });
+
+      return (
+        <div className="col-12 col-md-5 m-1">
+          <Card>
+            <h4 className="text-left">Comments</h4>
+            <ul className="list-unstyled">
+              {commentsRendered}
+            </ul>
+          </Card>
+        </div>
+      );
+    }
+
+    render() {
+      if (this.props.dish != null) {
+        const dishSelected = this.renderDish(this.props.dish)
+        const dishComments = this.renderComments(this.props.dish.comments)
+        return (
+          <div className="row">
+            {dishSelected}
+            {dishComments}
+          </div>
+        );
       } else {
         return (
           <div></div>
         );
       }
-    }
-
-    render() {
-      return this.renderDish(this.props.dish)
     }
 }
 
