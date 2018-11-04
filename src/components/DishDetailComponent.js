@@ -12,9 +12,8 @@ class DishDetail extends Component {
           <div key={dish.id} className="col-12 col-md-5 m-1">
             <Card>
               <CardImg width="100%" src={dish.image} alt={dish.name} />
-              <CardImgOverlay>
-                <CardTitle>{dish.name}</CardTitle>
-              </CardImgOverlay>
+              <h4 className="text-left">{dish.name}</h4>
+              <p className="text-left">{dish.description}</p>
             </Card>
           </div>
         );
