@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
 
-class Menu extends Component {
-    constructor(props) {
-        super(props);
+    function RenderMenuItem({ dish, onClick }) {
+        return (
+            <Card key={dish.id} onClick={() => this.props.onClick(dish.id)}>
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImgOverlay>
+                    <CardTitle>{dish.name}</CardTitle>
+                </CardImgOverlay>
+            </Card>
+        );
     }
 
-    render() {
+    const Menu = (props) => {
         const menu = this.props.dishes.map((dish) => {
             return (
-              <div key={dish.id} className="col-12 col-md-5 m-1">
-              <Card key={dish.id} onClick={() => this.props.onClick(dish.id)}>
-                  <CardImg width="100%" src={dish.image} alt={dish.name} />
-                  <CardImgOverlay>
-                    <CardTitle>{dish.name}</CardTitle>
-                  </CardImgOverlay>
-                </Card>
-              </div>
+                <div key={dish.id} className="col-12 col-md-5 m-1">
+                    <RenderMenuItem dish={dish} onClick={props.onClick} />
+                </div>
             );
         });
 
@@ -28,6 +29,5 @@ class Menu extends Component {
           </div>
         );
     }
-}
 
 export default Menu;
