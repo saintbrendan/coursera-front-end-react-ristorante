@@ -1,9 +1,94 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Card, CardImg, CardText, CardBody,
-  CardTitle, Breadcrumb, BreadcrumbItem
+  CardTitle, Breadcrumb, BreadcrumbItem,
+  Button, Modal, ModalHeader, ModalBody,
+  Form, FormGroup, Input, Label
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { LocalForm, Control, Errors } from 'react-redux-form';
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => val && (val.length >= len);
+
+class CommentForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isModalOpen: false
+    };
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleComment = this.handleComment.bind(this);
+  }
+
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    });
+  }
+
+  handleComment(event) {
+    this.toggleModal();
+    // alert("Username: " + this.username.value + " Password: " + this.password.value+ " Remember: " + this.remember.checked);
+    alert('hi');
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <div>
+        <Button outline onClick={this.toggleModal} color="secondary"><span className="fa fa-pencil fa-lg" /> Submit Comment</Button>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+          <ModalBody>
+            <LocalForm onSubmit={this.handleLogin}>
+
+              <FormGroup>
+                <Label htmlFor="rating">Rating</Label>
+                <Control.select model=".rating" name="rating "
+                  className="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Control.select>
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="author">Your Name</Label>
+                <Control.text model=".author" id="author" name="author"
+                  placeholder="Your Name"
+                  className="form-control"
+                  validators={{
+                    required, minLength: minLength(3), maxLength: maxLength(15)
+                  }}
+                />
+                <Errors
+                  className="text-danger"
+                  model=".author"
+                  show="touched"
+                  messages={{
+                    required: 'Required',
+                    minLength: 'Must be greater than 2 characters',
+                    maxLength: 'Must be 15 characters or less'
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="comment">Comment</Label>
+                <Input type="textarea" rows="6" id="comment" name="comment"
+                  innerRef={(input) => this.username = input} />
+              </FormGroup>
+              <Button type="submit" value="submit" color="primary">Login</Button>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
+  }
+}
 
 function RenderDish({ dish }) {
   return (
@@ -30,13 +115,12 @@ function RenderComments({ comments }) {
   });
 
   return (
-    <div className="col-12 col-md-5 m-1">
-      <Card>
-        <h4 className="text-left">Comments</h4>
-        <ul className="list-unstyled">
-          {commentsRendered}
-        </ul>
-      </Card>
+    <div >
+      <h4 className="text-left">Comments</h4>
+      <ul className="list-unstyled">
+        {commentsRendered}
+      </ul>
+      <CommentForm />
     </div>
   );
 }
@@ -57,7 +141,9 @@ const DishDetail = (props) => {
         </div>
         <div className="row">
           <RenderDish dish={props.dish} />
-          <RenderComments comments={props.comments} />
+          <div className="col-7 col-md-6 m-7">
+            <RenderComments className="col-6" comments={props.comments} />
+          </div>
         </div>
       </div>
     );
@@ -67,6 +153,5 @@ const DishDetail = (props) => {
     );
   }
 }
-
 
 export default DishDetail;
