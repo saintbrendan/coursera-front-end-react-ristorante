@@ -94,14 +94,14 @@ function RenderDish({ dish }) {
     <div key={dish.id} className="col-12 col-md-5 m-1">
       <Card>
         <CardImg width="100%" src={dish.image} alt={dish.name} />
-        <h4 className="text-left">{dish.name}</h4>
-        <p className="text-left">{dish.description}</p>
+        <CardTitle>{dish.name}</CardTitle>
+        <CardText>{dish.description}</CardText>
       </Card>
     </div>
   );
 }
 
-function RenderComments({comments, addComment, dishId}) {
+function RenderComments({ comments, addComment, dishId }) {
   const commentsRendered = comments.map((comment) => {
     const commentDate = new Date(comment.date)
     const dateMonDdYYYY = commentDate.toLocaleDateString('us-EN', { year: 'numeric', month: 'short', day: '2-digit' })
