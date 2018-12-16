@@ -20,7 +20,7 @@ class CommentForm extends Component {
       isModalOpen: false
     };
     this.toggleModal = this.toggleModal.bind(this);
-    this.handleComment = this.handleComment.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   toggleModal() {
@@ -29,11 +29,9 @@ class CommentForm extends Component {
     });
   }
 
-  handleComment(event) {
+  handleSubmit(values) {
     this.toggleModal();
-    // alert("Username: " + this.username.value + " Password: " + this.password.value+ " Remember: " + this.remember.checked);
-    alert('hi');
-    event.preventDefault();
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
   }
 
   render() {
@@ -43,11 +41,11 @@ class CommentForm extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
-            <LocalForm onSubmit={this.handleLogin}>
+            <LocalForm onSubmit={(value) => this.handleSubmit(value)}>
 
               <FormGroup>
                 <Label htmlFor="rating">Rating</Label>
-                <Control.select model=".rating" name="rating "
+                <Control.select model=".rating" name="rating"
                   className="form-control">
                   <option>1</option>
                   <option>2</option>
@@ -78,10 +76,11 @@ class CommentForm extends Component {
               </FormGroup>
               <FormGroup>
                 <Label htmlFor="comment">Comment</Label>
-                <Input type="textarea" rows="6" id="comment" name="comment"
-                  innerRef={(input) => this.username = input} />
+                <Control.textarea model=".comment" id="comment" name="comment"
+                  rows="6"
+                  className="form-control" />
               </FormGroup>
-              <Button type="submit" value="submit" color="primary">Login</Button>
+              <Button type="submit" value="Submit" color="primary">Submit</Button>
             </LocalForm>
           </ModalBody>
         </Modal>
@@ -102,7 +101,7 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({comments, addComment, dishId}) {
   const commentsRendered = comments.map((comment) => {
     const commentDate = new Date(comment.date)
     const dateMonDdYYYY = commentDate.toLocaleDateString('us-EN', { year: 'numeric', month: 'short', day: '2-digit' })
@@ -120,7 +119,7 @@ function RenderComments({ comments }) {
       <ul className="list-unstyled">
         {commentsRendered}
       </ul>
-      <CommentForm />
+      <CommentForm dishId={dishId} addComment={addComment} />
     </div>
   );
 }
@@ -142,7 +141,10 @@ const DishDetail = (props) => {
         <div className="row">
           <RenderDish dish={props.dish} />
           <div className="col-7 col-md-6 m-7">
-            <RenderComments className="col-6" comments={props.comments} />
+            <RenderComments comments={props.comments}
+              addComment={props.addComment}
+              dishId={props.dish.id}
+            />
           </div>
         </div>
       </div>
