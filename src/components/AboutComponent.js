@@ -3,6 +3,7 @@ import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'r
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl';
 import { Fade, Stagger } from 'react-animation-components';
+import { Loading } from './LoadingComponent';
 
 function RenderLeader({ leader }) {
     return (
@@ -20,23 +21,38 @@ function RenderLeader({ leader }) {
 }
 
 function About(props) {
-    const leaders = (
-        <Media list>
-            <Stagger in>
-                {
-                    props.leaders.leaders.map((leader) => {
-                        return (
-                            <Fade in>
-                                <div key={leader.id} className="col-12 mt-5">
-                                    <RenderLeader leader={leader} />
-                                </div>
-                            </Fade>
-                        );
-                    })
-                }
-            </Stagger>
-        </Media>
-    )
+    let leaders
+    if (props.leaders.isLoading) {
+        leaders = (
+            <div className="container">
+                <Loading />
+            </div>
+        );
+    } else if (props.leaders.errMess) {
+        leaders = (
+            <div className="container">
+                <h2>Failure loading leaders: {props.leaders.errMess}</h2>
+            </div>
+        )
+    } else {
+        leaders = (
+            <Media list>
+                <Stagger in>
+                    {
+                        props.leaders.leaders.map((leader) => {
+                            return (
+                                <Fade in>
+                                    <div key={leader.id} className="col-12 mt-5">
+                                        <RenderLeader leader={leader} />
+                                    </div>
+                                </Fade>
+                            );
+                        })
+                    }
+                </Stagger>
+            </Media>
+        )
+    }
 
     return (
         <div className="container">
