@@ -21,7 +21,7 @@ function RenderCard({ item, isLoading, errMess }) {
     }
     else {
         if (typeof item === 'undefined') {
-            return (<Card>item is undefined</Card>)
+            return (<div></div>)
         } else {
             return (
                 <FadeTransform
